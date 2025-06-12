@@ -10,10 +10,8 @@ import faiss
 import numpy as np
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 
-# Initialize app
 app = FastAPI()
 
-# Enable CORS for frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -22,13 +20,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Setup directories
 UPLOAD_DIR = "uploaded_pdfs"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 # Load models
 embed_model = SentenceTransformer('all-MiniLM-L6-v2')
-model_id = "tiiuae/falcon-rw-1b"
+model_id = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 model = AutoModelForCausalLM.from_pretrained(model_id)
 chat = pipeline("text-generation", model=model, tokenizer=tokenizer)
@@ -90,12 +87,12 @@ async def chat_with_pdf(query: str = Form(...)):
         return JSONResponse(status_code=400, content={"error": "No PDF uploaded or content not processed."})
 
     context = retrieve_context(query)
-    prompt = f"You are an intelligent assistant. Answer the question based on the context below:\n\n{context}\n\nQuestion: {query}\nAnswer:"
+    prompt = f"You are an intelligent assistant. Based solely on the context provided below, answer the question explicitly without including any additional information or context.\n\n{context}\n\nQuestion: {query}\nAnswer:"
     answer = ask_llm(prompt)
     return {"answer": answer}
 
 @app.post("/chat_general")
 async def chat_general(query: str = Form(...)):
-    prompt = f"You are a helpful assistant. Answer the following question:\n\nQuestion: {query}\nAnswer:"
+    prompt = f"You are a helpful assistant.Provide a concise and direct answer to the following question without any additional information or follow-up questions:\n\nQuestion: {query}\nAnswer:"
     answer = ask_llm(prompt)
     return {"answer": answer}
