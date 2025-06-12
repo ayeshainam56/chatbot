@@ -34,7 +34,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<h2 style='text-align:center;'>🤖 Chatbot</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align:center;'>🤖 PDF + General Knowledge Chatbot</h2>", unsafe_allow_html=True)
 st.markdown("<p style='text-align:center;'>Upload a PDF and chat below. The bot will respond based on the PDF if uploaded, or general knowledge otherwise.</p>", unsafe_allow_html=True)
 
 # Initialize session state
